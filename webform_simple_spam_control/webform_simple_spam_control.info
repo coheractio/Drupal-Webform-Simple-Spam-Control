@@ -1,0 +1,5 @@
+name = Webform Simple Spam Control
+description = Automatically add hidden fields to webform to limit spammer submission
+package = Webform
+core = 7.x
+files[] = webform_simple_spam_control.module

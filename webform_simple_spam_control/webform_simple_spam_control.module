@@ -1,0 +1,40 @@
+<?php
+
+/**
+ * Implement hook_form_alter().
+ */
+function webform_simple_spam_control_form_alter(&$form, &$form_state, $form_id) {
+  // Add honey pot fieldsfor webform spammer
+  if (strpos($form_id,'webform_client_form') !== FALSE){
+   
+    // Honey pot 1: text field hidden with css
+    $form['webform_ssc_field_1'] = array(
+       '#type' => 'textfield', 
+       '#title' => t('Name'), // Make it looking like a real field name 
+       '#default_value' => "", 
+       '#size' => 60, 
+       '#maxlength' => 128, 
+       '#required' => FALSE,
+     );
+     $form['#attached']['css']['.form-item-webform-ssc-field-1 {display:none;}'] = array( 'type' => 'inline');
+     
+     // Honey pot 1: hidden field
+     $form['webform_ssc_field_2'] = array(
+       '#type' => 'hidden', 
+       '#default_value' =>  "", 
+     );
+     
+     $form['#validate'][] ='_webform_simple_spam_control_validate';
+  }
+  
+}
+
+function _webform_simple_spam_control_validate($form, &$form_state) {
+  // Webform simple spam control fields must be empty to validate the webform
+  if (isset($form_state['values']['webform_ssc_field_1']) && !empty($form_state['values']['webform_ssc_field_1'])) {
+    form_set_error('', t('Error: please review your submission'));
+  }
+  if (isset($form_state['values']['webform_ssc_field_2']) && !empty($form_state['values']['webform_ssc_field_2'])) {
+    form_set_error('', t('Error: please review your submission'));
+  }
+}
